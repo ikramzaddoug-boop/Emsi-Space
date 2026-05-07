@@ -4,6 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from datetime import datetime
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import Reservation
 from .serializers import ReservationSerializer
 
@@ -22,7 +24,14 @@ class ReservationViewSet(viewsets.ModelViewSet):
         return Reservation.objects.filter(user=user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        reservation = serializer.save(user=self.request.user)
+        send_mail(
+            "Reservation created",
+            f"Your reservation for room {reservation.room.name} on {reservation.date} has been created.",
+            getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@roombooker.local"),
+            [reservation.user.email] if reservation.user.email else [],
+            fail_silently=True,
+        )
 
     @action(detail=False, methods=['get'])
     def mes_reservations(self, request):
@@ -69,6 +78,13 @@ class ReservationViewSet(viewsets.ModelViewSet):
 
         reservation.status = 'annulee'
         reservation.save()
+        send_mail(
+            "Reservation cancelled",
+            f"Reservation {reservation.id} has been cancelled.",
+            getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@roombooker.local"),
+            [reservation.user.email] if reservation.user.email else [],
+            fail_silently=True,
+        )
         return Response(
             {'message': 'Reservation cancelled successfully'},
             status=status.HTTP_200_OK
@@ -91,6 +107,13 @@ class ReservationViewSet(viewsets.ModelViewSet):
 
         reservation.status = 'confirmee'
         reservation.save()
+        send_mail(
+            "Reservation confirmed",
+            f"Reservation {reservation.id} has been confirmed.",
+            getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@roombooker.local"),
+            [reservation.user.email] if reservation.user.email else [],
+            fail_silently=True,
+        )
         return Response(
             ReservationSerializer(reservation).data,
             status=status.HTTP_200_OK

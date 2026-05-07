@@ -3,8 +3,11 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import CustomUser
-from .serializers import RegisterSerializer, UserSerializer
+from .serializers import RegisterSerializer, UserSerializer, UserAdminSerializer
 
 class RegisterView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
@@ -71,3 +74,68 @@ class StatsView(APIView):
         
         max_possible = total_rooms * 7 * 24
         return int((reservations / max_possible) * 100) if max_possible > 0 else 0
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = UserAdminSerializer
+    permission_classes = [IsAuthenticated]
+    filterset_fields = ['role', 'is_active']
+    search_fields = ['username', 'email', 'first_name', 'last_name', 'department']
+    ordering_fields = ['id', 'username', 'email', 'last_login', 'created_at']
+    ordering = ['-id']
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_admin:
+            return CustomUser.objects.all()
+        return CustomUser.objects.filter(id=user.id)
+
+
+class PasswordResetRequestView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response({"error": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = CustomUser.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            reset_link = f"http://localhost:5173/reset-password?uid={user.pk}&token={token}"
+            send_mail(
+                "Room Booker password reset",
+                f"Use this link to reset your password: {reset_link}",
+                getattr(settings, "DEFAULT_FROM_EMAIL", "noreply@roombooker.local"),
+                [email],
+                fail_silently=True,
+            )
+        except CustomUser.DoesNotExist:
+            pass
+
+        return Response({"message": "If this email exists, reset instructions have been sent."})
+
+
+class PasswordResetConfirmView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        user_id = request.data.get("uid")
+        token = request.data.get("token")
+        new_password = request.data.get("password")
+
+        if not user_id or not token or not new_password:
+            return Response({"error": "uid, token and password are required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user = CustomUser.objects.get(pk=user_id)
+        except CustomUser.DoesNotExist:
+            return Response({"error": "Invalid user"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not default_token_generator.check_token(user, token):
+            return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.set_password(new_password)
+        user.save()
+        return Response({"message": "Password reset successful"})

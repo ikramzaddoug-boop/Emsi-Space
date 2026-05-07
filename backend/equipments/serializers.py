@@ -6,7 +6,7 @@ from django.utils import timezone
 class EquipmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Equipment
-        fields = ['id', 'name', 'description', 'icon', 'quantity', 'is_available', 'created_at']
+        fields = ['id', 'name', 'description', 'icon', 'photo_url', 'quantity', 'is_available', 'created_at']
 
 
 class EquipmentReservationSerializer(serializers.ModelSerializer):

@@ -6,7 +6,14 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from users.views import RegisterView, MeView, StatsView
+from users.views import (
+    RegisterView,
+    MeView,
+    StatsView,
+    UserViewSet,
+    PasswordResetRequestView,
+    PasswordResetConfirmView,
+)
 from rooms.views import RoomViewSet
 from equipments.views import EquipmentViewSet, EquipmentReservationViewSet
 from reservations.views import ReservationViewSet
@@ -16,6 +23,7 @@ router.register(r'salles', RoomViewSet, basename='room')
 router.register(r'equipements', EquipmentViewSet, basename='equipment')
 router.register(r'reservations-equipement', EquipmentReservationViewSet, basename='equipment_reservation')
 router.register(r'reservations', ReservationViewSet, basename='reservation')
+router.register(r'utilisateurs', UserViewSet, basename='user')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +35,6 @@ urlpatterns = [
     path('api/inscription/', RegisterView.as_view(), name='register'),
     path('api/moi/', MeView.as_view(), name='me'),
     path('api/statistiques/', StatsView.as_view(), name='stats'),
+    path('api/password-reset/', PasswordResetRequestView.as_view(), name='password_reset'),
+    path('api/password-reset/confirm/', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 ]
