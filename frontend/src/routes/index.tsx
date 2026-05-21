@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { LandingNavbar } from "../components/LandingNavbar";
 import { FiArrowRight, FiHome, FiZap, FiUsers, FiShield, FiCalendar, FiTrendingUp } from "react-icons/fi";
 import { useState, useEffect } from "react";
+import { EmsiLogo } from "../components/EmsiLogo";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -28,9 +29,7 @@ function LandingPage() {
           <div className="max-w-3xl">
             {/* Logo */}
             <div className="flex items-center gap-3 mb-8">
-              <div className="size-12 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-black text-2xl shadow-lg">
-                S
-              </div>
+              <EmsiLogo size={48} />
               <h1 className={`text-4xl font-black tracking-tight ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>
                 EmsiSpace
               </h1>
@@ -154,9 +153,7 @@ function LandingPage() {
       <div className={`py-12 px-6 transition-all duration-700 ease-in-out ${isDark ? 'bg-gray-950 border-t border-gray-900' : 'bg-gray-100 border-t border-gray-300'}`}>
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="size-8 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-lg flex items-center justify-center text-white font-black text-lg shadow-md">
-              S
-            </div>
+            <EmsiLogo size={32} />
             <span className={`text-xl font-black ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>EmsiSpace</span>
           </div>
           <p className={`text-sm ${isDark ? 'text-gray-500' : 'text-gray-600'}`}>

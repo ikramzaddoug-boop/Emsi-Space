@@ -7,7 +7,7 @@ class Equipment(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
     icon = models.CharField(max_length=50, blank=True, default='📦')
-    photo_url = models.URLField(blank=True, null=True) # Added null=True
+    photo_url = models.URLField(blank=True, null=True, max_length=500)
     
     quantity = models.PositiveIntegerField(default=1)
     is_available = models.BooleanField(default=True)

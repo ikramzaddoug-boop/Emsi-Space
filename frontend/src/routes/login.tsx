@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { EmsiLogo } from "../components/EmsiLogo";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../components/dashboard/Toast";
 import { FiUser, FiLock, FiArrowRight } from "react-icons/fi";
@@ -41,7 +42,7 @@ function Login() {
 
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-16">
-            <div className="size-10 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center font-bold text-xl border border-white/30 shadow-lg">S</div>
+            <EmsiLogo size={40} />
             <span className="text-2xl font-extrabold tracking-tight">EmsiSpace</span>
           </div>
           <h1 className="text-5xl font-black leading-[1.1] mb-6 max-w-md">Réservez vos salles & équipements en quelques clics.</h1>

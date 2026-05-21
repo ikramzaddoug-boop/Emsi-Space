@@ -15,9 +15,11 @@ class RoomReservationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_admin:
-            return RoomReservation.objects.all()
-        return RoomReservation.objects.filter(user=user)
+        qs = RoomReservation.objects.all() if user.is_admin else RoomReservation.objects.filter(user=user)
+        status_filter = self.request.query_params.get('status')
+        if status_filter:
+            qs = qs.filter(status=status_filter)
+        return qs
 
     def perform_create(self, serializer):
         # On force les valeurs par défaut pour éviter les erreurs SQL de champ NOT NULL
@@ -158,9 +160,11 @@ class EquipmentReservationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_admin:
-            return EquipmentReservation.objects.all()
-        return EquipmentReservation.objects.filter(user=user)
+        qs = EquipmentReservation.objects.all() if user.is_admin else EquipmentReservation.objects.filter(user=user)
+        status_filter = self.request.query_params.get('status')
+        if status_filter:
+            qs = qs.filter(status=status_filter)
+        return qs
 
     def perform_create(self, serializer):
         serializer.save(

@@ -38,6 +38,13 @@ function AdminEquipment() {
       setEditingEq(null);
       queryClient.invalidateQueries({ queryKey: ["admin-equipment"] });
       queryClient.invalidateQueries({ queryKey: ["global-stats"] });
+    },
+    onError: (err: any) => {
+      const detail = err?.response?.data;
+      const msg = typeof detail === 'object'
+        ? Object.entries(detail).map(([k, v]) => `${k}: ${v}`).join(' | ')
+        : "Erreur lors de la création";
+      toast.push({ type: "error", msg });
     }
   });
 
@@ -129,7 +136,9 @@ function AdminEquipment() {
             const formData = new FormData(e.currentTarget);
             const data = Object.fromEntries(formData.entries());
             saveMutation.mutate({
-              ...data,
+              name: data.name,
+              description: (data.description as string).trim() || null,
+              photo_url: (data.photo_url as string).trim() || null,
               quantity: parseInt(data.quantity as string) || 1,
               is_available: data.is_available === 'on'
             });
@@ -150,7 +159,7 @@ function AdminEquipment() {
             </div>
             <div>
               <label className="text-sm font-medium">Photo URL</label>
-              <input name="photo_url" defaultValue={editingEq?.photo_url} className="input-field mt-1" placeholder="https://..." />
+              <input name="photo_url" defaultValue={editingEq?.photo_url} className="input-field mt-1" placeholder="https://..." maxLength={500} />
             </div>
           </div>
           <div className="flex items-center gap-2 pt-2">

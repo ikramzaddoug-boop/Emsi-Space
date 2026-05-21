@@ -143,11 +143,11 @@ export function SallesGrid({ allowReserve = true }: { allowReserve?: boolean }) 
           {aiResult?.has_conflict && (
             <div className="p-4 bg-orange-50 rounded-xl border border-orange-100 animate-fade-in">
               <div className="flex items-center gap-2 text-orange-700 font-bold mb-2 text-sm">
-                <FiAlertTriangle /> IA : Salle indisponible sur ce créneau.
+                <FiAlertTriangle /> Salle indisponible sur ce créneau.
               </div>
               {aiResult.suggestions?.length > 0 && (
                 <div className="mt-2">
-                  <p className="text-xs text-orange-600 mb-2 font-medium">L'IA vous suggère ces créneaux libres :</p>
+                  <p className="text-xs text-orange-600 mb-2 font-medium">Autres suggestions horaires :</p>
                   <div className="flex flex-wrap gap-2">
                     {aiResult.suggestions.map((s: any, i: number) => (
                       <button 

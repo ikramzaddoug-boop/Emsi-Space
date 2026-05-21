@@ -15,7 +15,8 @@ class CustomUser(AbstractUser):
     )
     phone = models.CharField(max_length=20, blank=True, null=True)
     department = models.CharField(max_length=100, blank=True, null=True)
-    last_login = models.DateTimeField(auto_now=True)
+    # last_login is already defined by AbstractUser — do NOT redefine it here
+    # as auto_now=True makes it unwritable and breaks Django's auth backend
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

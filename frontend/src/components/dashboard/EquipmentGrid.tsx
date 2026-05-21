@@ -142,7 +142,7 @@ export function EquipmentGrid() {
           {aiResult?.has_conflict && (
             <div className="p-4 bg-orange-50 rounded-xl border border-orange-100 animate-fade-in">
               <div className="flex items-center gap-2 text-orange-700 font-bold text-sm">
-                <FiAlertTriangle /> IA : Stock insuffisant pour ce créneau.
+                <FiAlertTriangle /> Stock insuffisant pour ce créneau.
               </div>
               <p className="text-xs text-orange-600 mt-1">Il ne reste que <strong>{aiResult.available_stock}</strong> article(s) disponible(s) à ces horaires.</p>
             </div>

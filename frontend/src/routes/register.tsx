@@ -3,6 +3,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../components/dashboard/Toast";
 import { FiMail, FiLock, FiUser, FiArrowRight } from "react-icons/fi";
+import { EmsiLogo } from "../components/EmsiLogo";
 
 export const Route = createFileRoute("/register")({ component: Register });
 
@@ -24,7 +25,18 @@ function Register() {
       toast.push({ type: "success", msg: "Compte créé ! Connectez-vous." });
       navigate({ to: "/login" });
     } catch (err: any) {
-      toast.push({ type: "error", msg: "Erreur lors de l'inscription" });
+      const data = err?.response?.data;
+      let msg = "Erreur lors de l'inscription";
+      if (data) {
+        // Extract first error message from Django's response
+        const firstKey = Object.keys(data)[0];
+        if (firstKey && Array.isArray(data[firstKey])) {
+          msg = `${firstKey}: ${data[firstKey][0]}`;
+        } else if (typeof data === 'string') {
+          msg = data;
+        }
+      }
+      toast.push({ type: "error", msg });
     } finally {
       setLoading(false);
     }
@@ -39,7 +51,7 @@ function Register() {
 
         <div className="relative z-10">
           <div className="flex items-center gap-3 mb-16">
-            <div className="size-10 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center font-bold text-xl border border-white/30 shadow-lg">S</div>
+            <EmsiLogo size={40} />
             <span className="text-2xl font-extrabold tracking-tight">EmsiSpace</span>
           </div>
           <h1 className="text-5xl font-black leading-[1.1] mb-6 max-w-md">Réservez vos salles & équipements en quelques clics.</h1>
@@ -76,7 +88,7 @@ function Register() {
               <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider">Nom complet</label>
               <div className="relative group">
                 <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
-                <input type="text" className="w-full bg-gray-100/80 border-none rounded-xl py-3.5 pl-12 pr-4 font-medium text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none shadow-sm" placeholder="Jean Dupont" value={name} onChange={(e) => setName(e.target.value)} required />
+                <input type="text" className="w-full bg-gray-100/80 border-none rounded-xl py-3.5 pl-12 pr-4 font-medium text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none shadow-sm" placeholder="Nom Complet" value={name} onChange={(e) => setName(e.target.value)} required />
               </div>
             </div>
 
@@ -84,7 +96,7 @@ function Register() {
               <label className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wider">Email</label>
               <div className="relative group">
                 <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-indigo-500 transition-colors" />
-                <input type="email" className="w-full bg-gray-100/80 border-none rounded-xl py-3.5 pl-12 pr-4 font-medium text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none shadow-sm" placeholder="jean@ecole.fr" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <input type="email" className="w-full bg-gray-100/80 border-none rounded-xl py-3.5 pl-12 pr-4 font-medium text-gray-900 focus:bg-white focus:ring-2 focus:ring-indigo-500/20 transition-all outline-none shadow-sm" placeholder="Nom@gmail.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
               </div>
             </div>
 

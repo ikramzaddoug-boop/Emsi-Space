@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { FiLogIn, FiUserPlus } from "react-icons/fi";
+import { EmsiLogo } from "./EmsiLogo";
 
 export function LandingNavbar({ isDark }: { isDark: boolean }) {
   return (
@@ -10,9 +11,7 @@ export function LandingNavbar({ isDark }: { isDark: boolean }) {
           <Link to="/" className="flex items-center gap-3 group">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity duration-300 ease-in-out" />
-              <div className="relative size-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-md">
-                S
-              </div>
+              <EmsiLogo size={40} />
             </div>
             <span className={`text-2xl font-bold transition-colors duration-300 ease-in-out ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>EmsiSpace</span>
           </Link>

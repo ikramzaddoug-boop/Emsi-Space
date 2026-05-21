@@ -17,10 +17,10 @@ class EquipmentViewSet(viewsets.ModelViewSet):
         from reservations.models import EquipmentReservation
         equipment = self.get_object()
         
-        # Delete associated reservations first
+        
         EquipmentReservation.objects.filter(equipment=equipment).delete()
         
-        # Then delete the equipment
+       
         equipment.delete()
         
         return Response(status=status.HTTP_204_NO_CONTENT)

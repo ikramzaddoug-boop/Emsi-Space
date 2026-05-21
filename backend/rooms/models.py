@@ -22,7 +22,7 @@ class Room(models.Model):
     location = models.CharField(max_length=200, blank=True)
     floor = models.IntegerField(blank=True, null=True)
     is_available = models.BooleanField(default=True)
-    image_url = models.URLField(blank=True, null=True) # Added null=True
+    image_url = models.URLField(blank=True, null=True, max_length=500)
 
     equipments = models.ManyToManyField("equipments.Equipment", blank=True, related_name='rooms')
 

@@ -23,17 +23,26 @@ export const getGlobalStats = async (): Promise<DashboardStats> => {
   return res.data;
 };
 
+// Combined stats: merges room + equipment reservation counts for the logged-in user
 export const getReservationStats = async (): Promise<ReservationStats> => {
-  const res = await API.get("/reservations/statistiques/");
+  const res = await API.get("/reservations/rooms/statistiques/");
   return res.data;
 };
 
+// Pending reservations: fetch both room and equipment reservations filtered by status
 export const getPendingReservations = async (limit = 5) => {
-  const res = await API.get(`/reservations/?status=en_attente&limit=${limit}`);
-  return res.data.results || res.data;
+  const [rooms, equips] = await Promise.all([
+    API.get("/reservations/rooms/", { params: { status: "en_attente" } }),
+    API.get("/reservations/equipments/", { params: { status: "en_attente" } }),
+  ]);
+  const roomList = (rooms.data.results || rooms.data).map((r: any) => ({ ...r, res_type: "room" }));
+  const equipList = (equips.data.results || equips.data).map((r: any) => ({ ...r, res_type: "equipment" }));
+  return [...roomList, ...equipList]
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .slice(0, limit);
 };
 
 export const getPopularRooms = async (limit = 3) => {
-  const res = await API.get(`/rooms/?limit=${limit}`);
+  const res = await API.get(`/rooms/`, { params: { limit } });
   return res.data.results || res.data;
 };

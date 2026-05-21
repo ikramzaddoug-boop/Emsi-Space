@@ -4,6 +4,7 @@ import {
 } from "react-icons/fi";
 import { useAuth } from "@/context/AuthContext";
 import type { Role } from "@/lib/mockData";
+import { EmsiLogo } from "@/components/EmsiLogo";
 
 const navByRole: Record<Role, { to: string; label: string; icon: any }[]> = {
   admin: [
@@ -41,7 +42,7 @@ export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void 
       <aside className={`fixed top-0 left-0 z-50 h-full w-64 bg-[var(--sidebar-bg)] transition-transform duration-300 lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="flex flex-col h-full py-6 px-4">
           <div className="flex items-center gap-3 px-4 mb-10">
-            <div className="size-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-blue-600/20">S</div>
+            <EmsiLogo size={40} dark />
             <div>
               <h2 className="font-bold text-lg tracking-tight text-white">EmsiSpace</h2>
               <span className="text-[10px] uppercase tracking-widest text-gray-500 font-bold">{user?.role}</span>
